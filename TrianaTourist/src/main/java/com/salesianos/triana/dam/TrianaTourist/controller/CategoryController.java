@@ -1,11 +1,16 @@
 package com.salesianos.triana.dam.TrianaTourist.controller;
 
+import com.salesianos.triana.dam.TrianaTourist.dto.POI.CreatePOIDTO;
+import com.salesianos.triana.dam.TrianaTourist.dto.category.CreateCategoryDTO;
 import com.salesianos.triana.dam.TrianaTourist.models.Category;
+import com.salesianos.triana.dam.TrianaTourist.models.POI;
 import com.salesianos.triana.dam.TrianaTourist.services.CategoryService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -25,6 +30,10 @@ public class CategoryController {
         return categoryService.findById(id);
     }
 
+    @PostMapping("/")
+    public ResponseEntity<Category> created(@Valid @RequestBody CreateCategoryDTO dto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(categoryService.save(dto));
+    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteCategory(@PathVariable Long id) {

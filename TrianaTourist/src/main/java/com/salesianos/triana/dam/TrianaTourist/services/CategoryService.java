@@ -1,12 +1,13 @@
 package com.salesianos.triana.dam.TrianaTourist.services;
 
+import com.salesianos.triana.dam.TrianaTourist.dto.category.CategoryDTOConverter;
+import com.salesianos.triana.dam.TrianaTourist.dto.category.CreateCategoryDTO;
 import com.salesianos.triana.dam.TrianaTourist.errors.exceptions.ListEntityNotFoundException;
 import com.salesianos.triana.dam.TrianaTourist.errors.exceptions.SingleEntityNotFoundException;
 import com.salesianos.triana.dam.TrianaTourist.models.Category;
-import com.salesianos.triana.dam.TrianaTourist.models.POI;
 import com.salesianos.triana.dam.TrianaTourist.repositories.CategoryRepository;
-import com.salesianos.triana.dam.TrianaTourist.repositories.POIRepositoy;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,6 +18,7 @@ import java.util.Optional;
 public class CategoryService {
 
     private final CategoryRepository categoryRepository;
+    private final CategoryDTOConverter categoryDTOConverter;
 
 
     public List<Category> findAll() {
@@ -35,15 +37,29 @@ public class CategoryService {
                 .orElseThrow(() -> new SingleEntityNotFoundException(id.toString(), Category.class));
     }
 
-    //FALTA EDITAR Y CREAR
+
+    public Category save (CreateCategoryDTO c){
+        Category category = categoryDTOConverter.createCategory(c);
+
+        this.categoryRepository.save(category);
+
+        return category;
+
+    }
 
 
     public void deleteById(Long id) {
 
-        Optional<Category> estacionServicio = categoryRepository.findById(id);
-        if(estacionServicio.isEmpty()){
+        Optional<Category> category = categoryRepository.findById(id);
+        if(category.isEmpty()){
             throw new SingleEntityNotFoundException(id.toString(),Category.class);
         }else{
+            category.map(c -> {
+
+                categoryRepository.save(c);
+                categoryRepository.deleteById(id);
+                return ResponseEntity.noContent().build();
+            });
             categoryRepository.deleteById(id);
         }
     }

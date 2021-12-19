@@ -3,6 +3,7 @@ package com.salesianos.triana.dam.TrianaTourist.models;
 import lombok.*;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,12 +13,15 @@ import java.util.List;
 @Getter
 @Setter
 @Builder
-public class Route {
+public class Route implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToMany
-    private List<POI> listPOIs = new ArrayList<>();
+    private String name;
+
+    @Builder.Default
+    @OneToMany(mappedBy = "route")
+    private List<RoutePOI> steps = new ArrayList<>();
 }

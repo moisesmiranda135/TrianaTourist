@@ -3,6 +3,7 @@ package com.salesianos.triana.dam.TrianaTourist.models;
 import lombok.*;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +14,7 @@ import java.util.List;
 @Getter
 @Setter
 @Builder
-public class POI {
+public class POI implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,8 +38,10 @@ public class POI {
 
     private String photo3;
 
-    @ManyToMany
-    private List<Route> listRoutes = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "poi",cascade = CascadeType.REMOVE)
+    private List<RoutePOI> listRoute = new ArrayList<>();
 
 
 }

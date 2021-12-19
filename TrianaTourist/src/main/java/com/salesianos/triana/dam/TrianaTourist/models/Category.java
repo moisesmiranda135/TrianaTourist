@@ -3,6 +3,7 @@ package com.salesianos.triana.dam.TrianaTourist.models;
 import lombok.*;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +13,7 @@ import java.util.List;
 @Getter
 @Setter
 @Builder
-public class Category {
+public class Category implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,6 +21,7 @@ public class Category {
 
     private String name;
 
-    @OneToMany(mappedBy ="category")
-    private List<POI> listPOIs = new ArrayList<>();
+    public Category(String name) {
+        this.name = name;
+    }
 }
