@@ -12,14 +12,14 @@ public class RouteDTOConverter {
         return GetRouteDTO.builder()
                 .name(r.getName())
                 .steps(r.getSteps().stream().map(poi -> new GetPOIDTO(
-                        poi.getPoi().getName(),
-                        poi.getPoi().getLocation(),
-                        poi.getPoi().getDescription(),
-                        poi.getPoi().getDate(),
-                        poi.getPoi().getCategory().getName(),
-                        poi.getPoi().getCoverPhoto(),
-                        poi.getPoi().getPhoto2(),
-                        poi.getPoi().getPhoto3()
+                        poi.getName(),
+                        poi.getLocation(),
+                        poi.getDescription(),
+                        poi.getDate(),
+                        poi.getCategory().getName(),
+                        poi.getCoverPhoto(),
+                        poi.getPhoto2(),
+                        poi.getPhoto3()
                 )).toList())
                 .build();
     }

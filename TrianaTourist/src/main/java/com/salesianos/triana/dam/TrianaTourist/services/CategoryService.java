@@ -1,6 +1,5 @@
 package com.salesianos.triana.dam.TrianaTourist.services;
 
-import com.salesianos.triana.dam.TrianaTourist.dto.POI.CreatePOIDTO;
 import com.salesianos.triana.dam.TrianaTourist.dto.category.CategoryDTOConverter;
 import com.salesianos.triana.dam.TrianaTourist.dto.category.CreateCategoryDTO;
 import com.salesianos.triana.dam.TrianaTourist.errors.exceptions.ListEntityNotFoundException;
@@ -8,8 +7,8 @@ import com.salesianos.triana.dam.TrianaTourist.errors.exceptions.SingleEntityNot
 import com.salesianos.triana.dam.TrianaTourist.models.Category;
 import com.salesianos.triana.dam.TrianaTourist.models.POI;
 import com.salesianos.triana.dam.TrianaTourist.repositories.CategoryRepository;
+import com.salesianos.triana.dam.TrianaTourist.repositories.POIRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,6 +20,7 @@ public class CategoryService {
 
     private final CategoryRepository categoryRepository;
     private final CategoryDTOConverter categoryDTOConverter;
+    private final POIRepository poiRepository;
 
 
     public List<Category> findAll() {
@@ -66,11 +66,10 @@ public class CategoryService {
         if(category.isEmpty()){
             throw new SingleEntityNotFoundException(id.toString(),Category.class);
         }else{
-            category.map(c -> {
-
-                categoryRepository.save(c);
-                categoryRepository.deleteById(id);
-                return ResponseEntity.noContent().build();
+            List<POI> poi = poiRepository.allCategoryPOI(id);
+            poi.forEach(p -> {
+                p.setCategory(null);
+                poiRepository.save(p);
             });
             categoryRepository.deleteById(id);
         }

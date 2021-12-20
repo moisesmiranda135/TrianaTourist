@@ -22,6 +22,17 @@ public class Route implements Serializable {
     private String name;
 
     @Builder.Default
-    @OneToMany(mappedBy = "route")
-    private List<RoutePOI> steps = new ArrayList<>();
+    @ManyToMany
+    private List<POI> steps = new ArrayList<>();
+
+
+    //HELPPERS
+
+    public void addToRoute(POI p){
+        steps.add(p);
+    }
+
+    public void removeToRoute(POI p){
+        steps.remove(p);
+    }
 }

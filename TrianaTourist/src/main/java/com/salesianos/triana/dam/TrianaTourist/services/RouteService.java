@@ -6,7 +6,9 @@ import com.salesianos.triana.dam.TrianaTourist.dto.route.GetRouteDTO;
 import com.salesianos.triana.dam.TrianaTourist.dto.route.RouteDTOConverter;
 import com.salesianos.triana.dam.TrianaTourist.errors.exceptions.ListEntityNotFoundException;
 import com.salesianos.triana.dam.TrianaTourist.errors.exceptions.SingleEntityNotFoundException;
+import com.salesianos.triana.dam.TrianaTourist.models.POI;
 import com.salesianos.triana.dam.TrianaTourist.models.Route;
+import com.salesianos.triana.dam.TrianaTourist.repositories.POIRepository;
 import com.salesianos.triana.dam.TrianaTourist.repositories.RouteRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +23,7 @@ import java.util.stream.Collectors;
 public class RouteService {
 
     private final RouteRepository routeRepository;
+    private final POIRepository poiRepository;
     private final RouteDTOConverter routeDTOConverter;
 
 
@@ -87,5 +90,27 @@ public class RouteService {
                 return ResponseEntity.noContent().build();
             });
         }
+    }
+
+    public Route addPOItoRoute (Long id, Long id2) {
+
+        Optional<Route> route = routeRepository.findById(id);
+        Optional<POI> poi = poiRepository.findById(id2);
+
+
+        route.get().addToRoute(poi.get());
+        return routeRepository.save(route.get());
+    }
+
+
+    public Route deletePOItoRoute (Long id, Long id2) {
+
+        Optional<Route> route = routeRepository.findById(id);
+        Optional<POI> poi = poiRepository.findById(id2);
+
+
+        route.get().removeToRoute(poi.get());
+        routeRepository.save(route.get());
+        return routeRepository.findById(id).get();
     }
 }

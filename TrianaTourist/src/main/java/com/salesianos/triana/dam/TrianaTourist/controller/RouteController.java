@@ -3,6 +3,7 @@ package com.salesianos.triana.dam.TrianaTourist.controller;
 
 import com.salesianos.triana.dam.TrianaTourist.dto.route.CreateRouteDTO;
 import com.salesianos.triana.dam.TrianaTourist.dto.route.GetRouteDTO;
+import com.salesianos.triana.dam.TrianaTourist.models.POI;
 import com.salesianos.triana.dam.TrianaTourist.models.Route;
 import com.salesianos.triana.dam.TrianaTourist.services.RouteService;
 import lombok.RequiredArgsConstructor;
@@ -44,5 +45,15 @@ public class RouteController {
     public ResponseEntity<?> deleteRoute(@PathVariable Long id) {
         routeService.deleteById(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("{id1}/poi/{id2}")
+    public ResponseEntity<Route> addPOItoRoute(@PathVariable Long id1, @PathVariable Long id2) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(routeService.addPOItoRoute(id1, id2));
+    }
+
+    @DeleteMapping("{id1}/poi/{id2}")
+    public ResponseEntity<Route> deletePOItoRoute(@PathVariable Long id1, @PathVariable Long id2) {
+        return  ResponseEntity.ok().body(routeService.deletePOItoRoute(id1, id2));
     }
 }

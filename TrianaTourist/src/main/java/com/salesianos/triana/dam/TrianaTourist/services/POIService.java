@@ -6,8 +6,11 @@ import com.salesianos.triana.dam.TrianaTourist.dto.POI.POIDTOConverter;
 import com.salesianos.triana.dam.TrianaTourist.errors.exceptions.ListEntityNotFoundException;
 import com.salesianos.triana.dam.TrianaTourist.errors.exceptions.SingleEntityNotFoundException;
 import com.salesianos.triana.dam.TrianaTourist.models.POI;
+import com.salesianos.triana.dam.TrianaTourist.models.Route;
 import com.salesianos.triana.dam.TrianaTourist.repositories.POIRepository;
+import com.salesianos.triana.dam.TrianaTourist.repositories.RouteRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +23,7 @@ import java.util.stream.Collectors;
 public class POIService {
 
     private final POIRepository poiRepositoy;
+    private final RouteRepository routeRepository;
     private final CategoryService categoryService;
     private final POIDTOConverter poidtoConverter;
 
@@ -107,4 +111,7 @@ public class POIService {
             });
         }
     }
+
+
+
 }

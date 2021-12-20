@@ -10,7 +10,7 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 
-public class UniquePhotoValidator implements ConstraintValidator<UniquePhoto, String> {
+public class UniquePhotoValidator implements ConstraintValidator<UniquePhoto, Object> {
 
     private String coverPhotoField;
     private String photo2Field;
@@ -25,19 +25,15 @@ public class UniquePhotoValidator implements ConstraintValidator<UniquePhoto, St
     }
 
     @Override
-    public boolean isValid(String value, ConstraintValidatorContext constraintValidatorContext) {
+    public boolean isValid(Object value, ConstraintValidatorContext constraintValidatorContext) {
         String coverPhoto = (String) PropertyAccessorFactory.forBeanPropertyAccess(value).getPropertyValue(coverPhotoField);
         String photo2 = (String) PropertyAccessorFactory.forBeanPropertyAccess(value).getPropertyValue(photo2Field);
         String photo3 = (String) PropertyAccessorFactory.forBeanPropertyAccess(value).getPropertyValue(photo3Field);
 
-        if ((coverPhoto.contentEquals(photo2))
-                || (coverPhoto.contentEquals(photo3))
-                || (photo2.contentEquals(photo3))
-        ){
-            return coverPhoto == null;
-        } else {
-            return StringUtils.hasText(coverPhoto) && true;
-        }
+        return StringUtils.hasText(coverPhoto) && !(coverPhoto.contentEquals(photo2))
+                && !(coverPhoto.contentEquals(photo3))
+                && !(photo3.contentEquals(photo2));
+
 
     }
 

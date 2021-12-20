@@ -42,10 +42,4 @@ public class POI implements Serializable {
     private String photo3;
 
 
-    @Builder.Default
-    @OneToMany(mappedBy = "poi",cascade = CascadeType.REMOVE)
-    private List<RoutePOI> listRoute = new ArrayList<>();
-
-
-
 }
