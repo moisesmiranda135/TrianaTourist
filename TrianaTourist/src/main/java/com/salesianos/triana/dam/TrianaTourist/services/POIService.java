@@ -3,10 +3,13 @@ package com.salesianos.triana.dam.TrianaTourist.services;
 import com.salesianos.triana.dam.TrianaTourist.dto.POI.CreatePOIDTO;
 import com.salesianos.triana.dam.TrianaTourist.dto.POI.GetPOIDTO;
 import com.salesianos.triana.dam.TrianaTourist.dto.POI.POIDTOConverter;
+import com.salesianos.triana.dam.TrianaTourist.errors.exceptions.CategoryExistingNotFoundException;
 import com.salesianos.triana.dam.TrianaTourist.errors.exceptions.ListEntityNotFoundException;
 import com.salesianos.triana.dam.TrianaTourist.errors.exceptions.SingleEntityNotFoundException;
+import com.salesianos.triana.dam.TrianaTourist.models.Category;
 import com.salesianos.triana.dam.TrianaTourist.models.POI;
 import com.salesianos.triana.dam.TrianaTourist.models.Route;
+import com.salesianos.triana.dam.TrianaTourist.repositories.CategoryRepository;
 import com.salesianos.triana.dam.TrianaTourist.repositories.POIRepository;
 import com.salesianos.triana.dam.TrianaTourist.repositories.RouteRepository;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +29,7 @@ public class POIService {
     private final RouteRepository routeRepository;
     private final CategoryService categoryService;
     private final POIDTOConverter poidtoConverter;
+    private final CategoryRepository categoryRepository;
 
 
 
@@ -66,7 +70,8 @@ public class POIService {
 
         POI poi = POI.builder()
                 .name(dto.getName())
-                .category(categoryService.findById(dto.getCategory_id()))
+                .category(categoryRepository.findById(dto.getCategory_id())
+                        .orElseThrow(() -> new CategoryExistingNotFoundException()))
                 .date(dto.getDate())
                 .location(dto.getLocation())
                 .description(dto.getDescription())
@@ -89,7 +94,8 @@ public class POIService {
             p.setPhoto2(poi.getPhoto2());
             p.setPhoto3(poi.getPhoto3());
             p.setPhoto3(poi.getPhoto3());
-            p.setCategory(categoryService.findById(poi.getCategory_id()));
+            p.setCategory(categoryRepository.findById(poi.getCategory_id())
+                    .orElseThrow(() -> new CategoryExistingNotFoundException()));
             poiRepositoy.save(p);
             return poidtoConverter.editPOI(p);
         }).orElseThrow(() -> new SingleEntityNotFoundException(id.toString(), POI.class));

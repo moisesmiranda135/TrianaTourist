@@ -4,6 +4,7 @@ package com.salesianos.triana.dam.TrianaTourist.services;
 import com.salesianos.triana.dam.TrianaTourist.dto.route.CreateRouteDTO;
 import com.salesianos.triana.dam.TrianaTourist.dto.route.GetRouteDTO;
 import com.salesianos.triana.dam.TrianaTourist.dto.route.RouteDTOConverter;
+import com.salesianos.triana.dam.TrianaTourist.errors.exceptions.AddPOItoRouteNotFoundException;
 import com.salesianos.triana.dam.TrianaTourist.errors.exceptions.ListEntityNotFoundException;
 import com.salesianos.triana.dam.TrianaTourist.errors.exceptions.SingleEntityNotFoundException;
 import com.salesianos.triana.dam.TrianaTourist.models.POI;
@@ -97,9 +98,21 @@ public class RouteService {
         Optional<Route> route = routeRepository.findById(id);
         Optional<POI> poi = poiRepository.findById(id2);
 
+        if(route.isEmpty()){
+            throw new SingleEntityNotFoundException(id.toString(),Route.class);
+        }else if(poi.isEmpty()){
+            throw new SingleEntityNotFoundException(id.toString(), POI.class);
+        }else{
+            route.get().getSteps().forEach(p -> {
+                if(p.getId().equals(poi.get().getId()))
+                    throw new AddPOItoRouteNotFoundException();
+            });
 
-        route.get().addToRoute(poi.get());
-        return routeRepository.save(route.get());
+            route.get().addToRoute(poi.get());
+            routeRepository.save(route.get());
+            return route.get();
+        }
+
     }
 
 
