@@ -32,16 +32,20 @@ public class POI implements Serializable {
     @ManyToOne
     private Category category;
 
+    @Lob
     private String coverPhoto;
 
+    @Lob
     private String photo2;
 
+    @Lob
     private String photo3;
 
 
     @Builder.Default
     @OneToMany(mappedBy = "poi",cascade = CascadeType.REMOVE)
     private List<RoutePOI> listRoute = new ArrayList<>();
+
 
 
 }
